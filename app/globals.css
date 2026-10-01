@@ -1,0 +1,166 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-work-sans), 'Work Sans', system-ui, sans-serif;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  --animate-ticker: ticker 40s linear infinite;
+
+  @keyframes ticker {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+}
+
+/* ÓXIDO palette: #0E0D0C fondo, #F2EFE9 hueso, #8A8578 piedra (5.3:1 sobre fondo, AA), #211F1A línea, #C73E1D óxido */
+:root {
+  color-scheme: dark;
+  --background: #0e0d0c;
+  --foreground: #f2efe9;
+  --card: #0e0d0c;
+  --card-foreground: #f2efe9;
+  --popover: #0e0d0c;
+  --popover-foreground: #f2efe9;
+  --primary: #c73e1d;
+  --primary-foreground: #f2efe9;
+  --secondary: #211f1a;
+  --secondary-foreground: #f2efe9;
+  --muted: #211f1a;
+  --muted-foreground: #8a8578;
+  --accent: #211f1a;
+  --accent-foreground: #f2efe9;
+  --destructive: #c73e1d;
+  --border: #211f1a;
+  --input: #211f1a;
+  --ring: #c73e1d;
+  --radius: 0rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-anton), 'Anton', Impact, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+
+@utility placeholder-frame {
+  border: 1px dashed var(--muted-foreground);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--border) 0 1px,
+    transparent 1px 14px
+  );
+}
+
+/* Textura de grano global — sutil, no decorativa de más: le quita lo "plano"
+   al negro liso sin que se note como efecto. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Pantalla de entrada */
+.intro-overlay {
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.85s ease;
+}
+.intro-overlay.intro-exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-mark-circle {
+  stroke-dasharray: 84;
+  stroke-dashoffset: 84;
+  animation: intro-draw 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards;
+}
+.intro-mark-crack {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: intro-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) 1.3s forwards;
+}
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.intro-letter {
+  opacity: 0;
+  transform: translate3d(var(--lx), var(--ly), 0) rotate(var(--lr));
+  filter: blur(6px);
+  animation: intro-letter-settle 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes intro-letter-settle {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-mark-circle,
+  .intro-mark-crack,
+  .intro-letter {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
